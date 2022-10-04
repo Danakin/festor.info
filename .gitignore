@@ -22,3 +22,4 @@ go.work
 
 ui/static/css/app.css
 ui/static/js/app.js
+node_modules/
