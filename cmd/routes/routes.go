@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"bytes"
 	"net/http"
 	"time"
 
@@ -24,37 +23,13 @@ func MakeRoutes(app *config.Application) *chi.Mux {
 	// processing should be stopped.
 	r.Use(middleware.Timeout(60 * time.Second))
 
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		ts, ok := app.TemplateCache["ui/templates/pages/index.page.tmpl"]
-		if !ok {
-			panic("not found")
-			return
-		}
-
-		buf := new(bytes.Buffer)
-		err := ts.Execute(buf, nil)
-		if err != nil {
-			panic(err)
-			return
-		}
-		buf.WriteTo(w)
-	})
-
-	r.Get("/blog", func(w http.ResponseWriter, r *http.Request) {
-		ts, ok := app.TemplateCache["ui/templates/pages/blog/index.page.tmpl"]
-		if !ok {
-			panic("not found")
-			return
-		}
-
-		buf := new(bytes.Buffer)
-		err := ts.Execute(buf, nil)
-		if err != nil {
-			panic(err)
-			return
-		}
-		buf.WriteTo(w)
-	})
+	r.Get("/", app.Controllers.Homepage.Index)
+	r.Get("/technologies", app.Controllers.Technology.Index)
+	r.Get("/contact", app.Controllers.Contact.Index)
+	r.Get("/cv", app.Controllers.CV.Index)
+	r.Get("/projects", app.Controllers.Project.Index)
+	r.Get("/blog", app.Controllers.Blog.Index)
+	r.Get("/blog/{slug}", app.Controllers.Blog.Show)
 
 	// r.Mount("/admin", adminRouter())
 
