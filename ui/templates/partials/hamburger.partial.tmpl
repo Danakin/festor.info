@@ -1,13 +1,8 @@
 {{ define "hamburger" }}
-<div id="hamburger" @click="
-  open = !open;
-  $emit('update:open', open);
-">
+<div id="hamburger">
     <div id="hamburger-bars">
         <span id="hamburger-bar-1" class="hamburger-bar"></span>
-
         <span id="hamburger-bar-2" class="hamburger-bar"></span>
-
         <span id="hamburger-bar-3" class="hamburger-bar"></span>
     </div>
 </div>
