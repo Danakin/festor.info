@@ -5,12 +5,15 @@ import (
 	"time"
 
 	"github.com/danakin/festor.info/cmd/config"
+	"github.com/danakin/festor.info/cmd/controllers"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
 
 func MakeRoutes(app *config.Application) *chi.Mux {
 	r := chi.NewRouter()
+
+	controllers := *controllers.NewControllers(app.TemplateCache)
 
 	// standard middleware
 	r.Use(middleware.RequestID)
@@ -23,13 +26,13 @@ func MakeRoutes(app *config.Application) *chi.Mux {
 	// processing should be stopped.
 	r.Use(middleware.Timeout(60 * time.Second))
 
-	r.Get("/", app.Controllers.Homepage.Index)
-	r.Get("/technologies", app.Controllers.Technology.Index)
-	r.Get("/contact", app.Controllers.Contact.Index)
-	r.Get("/cv", app.Controllers.CV.Index)
-	r.Get("/projects", app.Controllers.Project.Index)
-	r.Get("/blog", app.Controllers.Blog.Index)
-	r.Get("/blog/{slug}", app.Controllers.Blog.Show)
+	r.Get("/", controllers.Homepage.Index)
+	r.Get("/technologies", controllers.Technology.Index)
+	r.Get("/contact", controllers.Contact.Index)
+	r.Get("/cv", controllers.CV.Index)
+	r.Get("/projects", controllers.Project.Index)
+	r.Get("/blog", controllers.Blog.Index)
+	r.Get("/blog/{slug}", controllers.Blog.Show)
 
 	// r.Mount("/admin", adminRouter())
 
