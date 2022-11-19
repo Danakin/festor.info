@@ -21,7 +21,11 @@ func (c *Blog) Index(w http.ResponseWriter, r *http.Request) {
 func (c *Blog) Show(w http.ResponseWriter, r *http.Request) {
 	route := "templates/pages/blog/show.page.tmpl"
 	fmt.Println()
-	fmt.Println("PARAM TEST", chi.URLParam(r, "slug"), chi.URLParam(r, "articleID"))
+	fmt.Println("PARAM TEST", "slug", chi.URLParam(r, "slug"), "articleId", chi.URLParam(r, "articleID"))
 	fmt.Println()
-	View(w, route, nil)
+
+	data := make(map[string]any)
+	data["Slug"] = chi.URLParam(r, "slug")
+
+	View(w, route, data)
 }

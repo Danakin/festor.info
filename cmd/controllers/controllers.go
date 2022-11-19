@@ -28,7 +28,7 @@ func NewControllers() *Controllers {
 	}
 }
 
-func View(w http.ResponseWriter, view string, data *interface{}) {
+func View(w http.ResponseWriter, view string, data any) {
 	ts, err := template.
 		New(view).
 		ParseFS(
@@ -42,7 +42,7 @@ func View(w http.ResponseWriter, view string, data *interface{}) {
 	}
 
 	buf := new(bytes.Buffer)
-	err = ts.ExecuteTemplate(buf, "app", nil)
+	err = ts.ExecuteTemplate(buf, "app", data)
 	if err != nil {
 		panic(err)
 	}
