@@ -6,6 +6,7 @@ import (
 
 	"github.com/danakin/festor.info/cmd/config"
 	"github.com/danakin/festor.info/cmd/controllers"
+	"github.com/danakin/festor.info/ui"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
@@ -36,8 +37,8 @@ func MakeRoutes(app *config.Application) *chi.Mux {
 
 	// r.Mount("/admin", adminRouter())
 
-	fs := http.FileServer(http.Dir("ui/static"))
-	r.Handle("/static/*", http.StripPrefix("/static/", fs))
+	fileServer := http.FileServer(http.FS(ui.EmbeddedFiles))
+	r.Handle("/static/*", fileServer)
 
 	return r
 }
