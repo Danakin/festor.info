@@ -1,21 +1,16 @@
 package controllers
 
 import (
-	"html/template"
 	"net/http"
 )
 
-type Project struct {
-	TemplateCache map[string]*template.Template
-}
+type Project struct{}
 
-func NewProjectController(templateCache map[string]*template.Template) *Project {
-	return &Project{
-		TemplateCache: templateCache,
-	}
+func NewProjectController() *Project {
+	return &Project{}
 }
 
 func (c *Project) Index(w http.ResponseWriter, r *http.Request) {
-	route := "ui/templates/pages/projects.page.tmpl"
-	View(route, nil, w, c.TemplateCache)
+	route := "templates/pages/projects.page.tmpl"
+	View(w, route, nil)
 }

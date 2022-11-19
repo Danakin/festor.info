@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"html/template"
 	"net/http"
+
+	"github.com/danakin/festor.info/ui"
 )
 
 type Controllers struct {
@@ -15,29 +17,36 @@ type Controllers struct {
 	Project    *Project
 }
 
-func NewControllers(templateCache map[string]*template.Template) *Controllers {
+func NewControllers() *Controllers {
 	return &Controllers{
-		Homepage:   NewHomepageController(templateCache),
-		Blog:       NewBlogController(templateCache),
-		Technology: NewTechnologyController(templateCache),
-		Contact:    NewContactController(templateCache),
-		CV:         NewCVController(templateCache),
-		Project:    NewProjectController(templateCache),
+		Homepage:   NewHomepageController(),
+		Blog:       NewBlogController(),
+		Technology: NewTechnologyController(),
+		Contact:    NewContactController(),
+		CV:         NewCVController(),
+		Project:    NewProjectController(),
 	}
 }
 
-func View(template string, data *interface{}, w http.ResponseWriter, templateCache map[string]*template.Template) {
-	ts, ok := templateCache[template]
-	if !ok {
-		panic("not found")
-		return
+func View(w http.ResponseWriter, view string, data *interface{}) {
+	ts, err := template.
+		New(view).
+		ParseFS(
+			ui.EmbeddedFiles,
+			"templates/layouts/app.layout.tmpl",
+			"templates/partials/*.partial.tmpl",
+			view,
+		)
+	if err != nil {
+		panic(err)
 	}
 
 	buf := new(bytes.Buffer)
-	err := ts.Execute(buf, data)
+	err = ts.ExecuteTemplate(buf, "app", nil)
 	if err != nil {
 		panic(err)
-		return
 	}
+
+	w.WriteHeader(200)
 	buf.WriteTo(w)
 }

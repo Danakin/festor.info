@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	app, err := config.NewApplication("./ui/templates")
+	app, err := config.NewApplication()
 	if err != nil {
 		panic(err.Error())
 	}

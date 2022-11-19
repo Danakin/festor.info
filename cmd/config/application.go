@@ -8,13 +8,10 @@ type Application struct {
 	TemplateCache map[string]*template.Template
 }
 
-func NewApplication(templatePath string) (*Application, error) {
-	templateCache, err := newTemplateCache(templatePath)
-	if err != nil {
-		return nil, err
-	}
+func NewApplication() (*Application, error) {
+	// if err != nil {
+	// 	return nil, err
+	// }
 
-	return &Application{
-		TemplateCache: templateCache,
-	}, nil
+	return &Application{}, nil
 }

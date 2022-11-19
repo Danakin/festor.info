@@ -1,21 +1,16 @@
 package controllers
 
 import (
-	"html/template"
 	"net/http"
 )
 
-type Contact struct {
-	TemplateCache map[string]*template.Template
-}
+type Contact struct{}
 
-func NewContactController(templateCache map[string]*template.Template) *Contact {
-	return &Contact{
-		TemplateCache: templateCache,
-	}
+func NewContactController() *Contact {
+	return &Contact{}
 }
 
 func (c *Contact) Index(w http.ResponseWriter, r *http.Request) {
-	route := "ui/templates/pages/contact.page.tmpl"
-	View(route, nil, w, c.TemplateCache)
+	route := "templates/pages/contact.page.tmpl"
+	View(w, route, nil)
 }

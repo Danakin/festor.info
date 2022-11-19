@@ -13,7 +13,7 @@ import (
 func MakeRoutes(app *config.Application) *chi.Mux {
 	r := chi.NewRouter()
 
-	controllers := *controllers.NewControllers(app.TemplateCache)
+	controllers := *controllers.NewControllers()
 
 	// standard middleware
 	r.Use(middleware.RequestID)
