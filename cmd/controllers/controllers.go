@@ -15,6 +15,7 @@ type Controllers struct {
 	Contact    *Contact
 	CV         *CV
 	Project    *Project
+	Error      *Error
 }
 
 func NewControllers() *Controllers {
@@ -25,6 +26,7 @@ func NewControllers() *Controllers {
 		Contact:    NewContactController(),
 		CV:         NewCVController(),
 		Project:    NewProjectController(),
+		Error:      NewErrorController(),
 	}
 }
 

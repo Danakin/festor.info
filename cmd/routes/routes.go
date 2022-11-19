@@ -40,6 +40,9 @@ func MakeRoutes(app *config.Application) *chi.Mux {
 	fileServer := http.FileServer(http.FS(ui.EmbeddedFiles))
 	r.Handle("/static/*", fileServer)
 
+	// 404 page
+	r.HandleFunc("/*", controllers.Error.Index)
+
 	return r
 }
 
