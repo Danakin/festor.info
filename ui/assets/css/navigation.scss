@@ -25,8 +25,8 @@ nav#navigation {
   background: linear-gradient(
     90deg,
     rgb(237 243 247) 0%,
-    rgb(255, 255, 255) 30%,
-    rgb(255, 255, 255) 100%
+    transparent 30%,
+    transparent 100%
   );
   top: 0;
   left: 0;
@@ -104,6 +104,13 @@ nav#navigation {
   &:hover {
     width: 13rem;
     box-shadow: 0 0 1px rgba(0, 0, 0, 0.25);
+    background: rgb(205, 205, 205);
+    background: linear-gradient(
+      90deg,
+      rgb(237 243 247) 0%,
+      rgb(255, 255, 255) 30%,
+      rgb(255, 255, 255) 100%
+    );
 
     #logo-ue {
       transform: translateX(-75%);
@@ -171,7 +178,7 @@ nav#navigation {
     outline: transparent;
   }
 
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: $mobileBreakPoint) {
     display: none;
   }
 

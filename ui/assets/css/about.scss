@@ -64,12 +64,17 @@ main {
         display: flex;
         gap: 0.5rem;
         justify-content: space-between;
-        flex-wrap: wrap;
-
-        img {
-          height: 3rem;
-          width: 3rem;
+        a {
+            width: 20%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            img {
+              width: 100%;
+              max-width: 3rem;
+            }
         }
+
       }
 
       p#cv {
