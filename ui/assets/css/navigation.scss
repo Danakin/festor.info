@@ -21,7 +21,8 @@ nav#navigation {
   z-index: 20;
   width: 3rem;
   transition: $transitionDelay width ease-in-out;
-  background-color: white;
+  background: rgb(205,205,205);
+  background: linear-gradient(90deg, rgb(237 243 247) 0%, rgb(255, 255, 255) 30%, rgb(255, 255, 255) 100%);
   top: 0;
   left: 0;
   bottom: 0;
@@ -70,7 +71,6 @@ nav#navigation {
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      background-color: white;
       padding: 0.25rem;
       min-height: 2rem;
       transition: all $transitionDelay ease-in-out;
