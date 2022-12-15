@@ -1,36 +1,50 @@
 {{ define "title" }}Index{{ end }}
 
 {{ define "body" }}
-<img id="about-img" src="/static/img/danny.jpg" alt="This is me" class="absolute top-0 left-0 h-screen object-cover opacity-30" />
-<section id="about" ref="about" class="relative flex min-h-screen w-full flex-col lg:flex-row">
+<section id="about">
+    <div id="about-img-container">
+        <img id="about-img" src="/static/img/danny.jpg" role="img" alt="This is me" aria-label="This is me" />
+    </div>
     <article class="relative flex flex-1 flex-col items-center justify-center gap-4 px-8">
-        <h2 class="pb-4 text-center text-2xl uppercase">Hi, ich bin Danny!</h2>
-        <h1 class="py-4 text-center text-4xl font-bold">
-            Ich erstelle <strong>moderne Webseiten</strong>
+        <p style="font-size: 1.25rem; text-align: center">Hi, ich bin Danny!</p> 
+        <h2 style="font-size: 1.5rem">
+            Ich bin <em>Freelancer</em>.
+        </h2>
+        <h1 style="font-size: 1.75rem; text-align: center">
+            Ich erstelle <strong>moderne Webseiten</strong>.
         </h1>
-        <p class="text-center text-xl">
-            Ich benutze <em>moderne Technologien</em> um den Traum Ihrer Webseite zu
-            verwirklichen.
-        </p>
-        <p class="text-center text-xl">
-            Webseiten und Lösungen nach Maß, nicht aus der Dose.
-        </p>
-        <p class="text-center text-xl">Webseiten, so individuell wie Ihre Ideen.</p>
+        <h3 style="text-align: right">Ich lebe in <em>Nagasaki, Japan</em>.</h3>
 
-        <AboutServiceCard class="mt-24">
-            <template #header> Sichere Web-Services </template>
-            <div>
-                Mit modernen Technologien entwickle ich sichere Anwendungen, die Ihren
-                Ansprüchen garantiert genügen.
-            </div>
-        </AboutServiceCard>
-        <AboutServiceCard>
-            <template #header> Schnelle Web-Seiten </template>
-            <div>
-                Browser müssen nicht langsam sein. Der Einsatz moderne
-                JavaScript-Frameworks garantiert sichere und schnelle Seiten.
-            </div>
-        </AboutServiceCard>
+        <p class="icons" style="margin-top: 3rem">
+            <img src="/static/icons/go.svg" alt="GO" aria-label="GO"  title="GO">
+            <img src="/static/icons/php.svg" alt="PHP" aria-label="PHP"  title="PHP">
+            <img src="/static/icons/laravel.svg" alt="Laravel" aria-label="Laravel"  title="Laravel">
+            <img src="/static/icons/livewire.svg" alt="Livewire" aria-label="Livewire"  title="Livewire">
+            <img src="/static/icons/inertia.svg" alt="Inertia.js" aria-label="Inertia.js"  title="Inertia.js">
+        </p>
+
+        <p class="icons">
+            <img src="/static/icons/javascript.svg" alt="JavaScript" aria-label="JavaScript"  title="JavaScript">
+            <img src="/static/icons/typescript.svg" alt="TypeScript" aria-label="TypeScript"  title="TypeScript">
+            <img src="/static/icons/vuejs.svg" alt="Vue.js" aria-label="Vue.js"  title="Vue.js">
+            <img src="/static/icons/alpinejs.svg" alt="Alpine.js" aria-label="Alpine.js"  title="Alpine.js">
+            <img src="/static/icons/flutter.svg" alt="Flutter" aria-label="Flutter"  title="Flutter">
+        </p>
+
+        <p id="cv">
+            <span>Download my CV 履歴書</span>
+            <span>
+                <a href="/static/cv/[GER]-2022-12-15.pdf">
+                    <img src="/static/flags/de.svg" alt="German CV" aria-label="German CV"  title="German CV">
+                </a>
+                <a href="/static/cv/[ENG]-2022-12-15.pdf">
+                    <img src="/static/flags/us.svg" alt="English CV" aria-label="English CV"  title="English CV">
+                </a>
+                <a href="/static/cv/[JAP]-2022-12-15.pdf">
+                    <img src="/static/flags/jp.svg" alt="Japanese CV" aria-label="German CV"  title="German CV">
+                </a>
+            </span>
+        </p>
     </article>
 </section>
 {{ end }}

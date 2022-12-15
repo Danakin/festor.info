@@ -7,12 +7,14 @@ body {
 
 main,
 footer {
+  display: flex;
+  flex-direction: column;
   position: relative;
   margin-left: 3rem;
   padding: 1rem;
   font-family: 'Bitter', serif;
 
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: $mobileBreakPoint) {
     & {
       margin-left: 13rem;
     }
