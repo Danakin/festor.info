@@ -12,5 +12,5 @@ func NewContactController() *Contact {
 
 func (c *Contact) Index(w http.ResponseWriter, r *http.Request) {
 	route := "templates/pages/contact.page.tmpl"
-	View(w, route, nil)
+	view(w, r, route, nil)
 }
