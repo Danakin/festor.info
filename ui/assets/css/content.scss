@@ -2,7 +2,12 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  font-family: 'Rubik', sans-serif;
+  font-family: "Rubik", sans-serif;
+  background: linear-gradient(
+    to right,
+    hsl(224, 66%, 100%) 0,
+    hsl(224, 66%, 95%) 100%
+  );
 }
 
 main,
@@ -12,7 +17,7 @@ footer {
   position: relative;
   margin-left: 3rem;
   padding: 1rem;
-  font-family: 'Bitter', serif;
+  font-family: "Bitter", serif;
 
   @media screen and (min-width: $mobileBreakPoint) {
     & {
@@ -22,7 +27,6 @@ footer {
 }
 
 footer {
-  background: linear-gradient(to right, hsl(224, 66%, 100%) 0, hsl(224, 66%, 95%) 100%);
   a {
     text-decoration: underline;
   }
