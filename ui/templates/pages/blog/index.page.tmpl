@@ -4,4 +4,25 @@
 
 {{ define "body" }}
 <h2>Latest Blog</h2>
+
+<form id="search" method="GET">
+    <label>
+        <span>Title</span>
+        <input type="search" name="title" id="title" value="{{ .Search.Title }}">
+    </label>
+    <label>
+        <span>Tag</span>
+        <select name="tag_id" id="tag_id">
+            <option value="" {{ if eq .Search.TagID 0}}selected{{ end }}>All</option>
+            <option value="1" {{ if eq .Search.TagID 1}}selected{{ end }}>Laravel</option>
+            <option value="2" {{ if eq .Search.TagID 2}}selected{{ end }}>Go</option>
+            <option value="3" {{ if eq .Search.TagID 3}}selected{{ end }}>Javascript</option>
+        </select>
+    </label>
+    <button>Search</button>
+</form>
+
+<div>
+    {{ .Search.Page }}
+</div>
 {{ end }}

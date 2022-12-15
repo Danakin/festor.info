@@ -3,6 +3,8 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"strconv"
+	"strings"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -15,7 +17,29 @@ func NewBlogController() *Blog {
 
 func (c *Blog) Index(w http.ResponseWriter, r *http.Request) {
 	route := "templates/pages/blog/index.page.tmpl"
-	view(w, r, route, nil)
+	tplData := templateData{}
+
+	title := strings.TrimSpace(r.URL.Query().Get("title"))
+	tagId, err := strconv.Atoi(r.URL.Query().Get("tag_id"))
+	if err != nil {
+		tagId = 0
+	}
+	page, err := strconv.Atoi(r.URL.Query().Get("page"))
+	if err != nil {
+		page = 1
+	}
+
+	tplData.Search = struct {
+		Title string
+		TagID int
+		Page  int
+	}{
+		Title: title,
+		TagID: tagId,
+		Page:  page,
+	}
+
+	view(w, r, route, &tplData)
 }
 
 func (c *Blog) Show(w http.ResponseWriter, r *http.Request) {

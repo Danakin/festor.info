@@ -1,0 +1,49 @@
+form#search {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    max-width: 600px;
+    margin: 2rem auto 0 auto;
+    padding: 1rem;
+    border-radius: .25rem;
+    background-color: white;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, .3);
+
+    @media screen and (min-width: $mobileBreakPoint) {
+        & {
+            flex-direction: row;
+        }
+    }
+
+    label {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        width: 100%;
+
+        span {
+            width: 50px;
+            text-align: center;
+        }
+
+        input,select {
+            flex-grow: 1;
+            padding: .5rem;
+        }
+    }
+
+    button {
+        background: hsl(224, 74%, 28%);
+        color: hsl(224, 74%, 88%);
+        border: none;
+        padding: .5rem 1rem;
+        border-radius: .1rem;
+
+        @media screen and (min-width: $mobileBreakPoint) {
+            & {
+                margin-left: auto;
+            }
+        }
+    }
+}
