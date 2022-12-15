@@ -1,17 +1,17 @@
 main {
+    height: 100%;
+    flex-grow: 1;
+    display: grid;
+    justify-content: center;
+    align-content: center;
+
     img#about-img {
+        pointer-events: none;
         position: absolute;
         top: 0;
         left: 0;
         height: 100vh;
         object-fit: cover;
         opacity: 30%;
-    }
-
-    section#about {
-        display: grid;
-        justify-content: center;
-        align-content: center;
-        height: 100%;
     }
 }

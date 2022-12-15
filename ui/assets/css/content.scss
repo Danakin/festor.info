@@ -1,3 +1,10 @@
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Rubik', sans-serif;
+}
+
 main,
 footer {
   position: relative;
@@ -9,5 +16,15 @@ footer {
     & {
       margin-left: 13rem;
     }
+  }
+}
+
+footer {
+  background: linear-gradient(to right, hsl(224, 66%, 100%) 0, hsl(224, 66%, 95%) 100%);
+  a {
+    text-decoration: underline;
+  }
+  p {
+    padding: 0.5rem;
   }
 }
