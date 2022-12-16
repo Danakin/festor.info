@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/danakin/festor.info/cmd/models"
 	"github.com/danakin/festor.info/ui"
 )
 
@@ -17,12 +18,14 @@ type Controllers struct {
 	CV         *CV
 	Project    *Project
 	Error      *Error
+
+	Services *models.Services
 }
 
-func NewControllers() *Controllers {
+func NewControllers(services *models.Services) *Controllers {
 	return &Controllers{
 		Homepage:   NewHomepageController(),
-		Blog:       NewBlogController(),
+		Blog:       NewBlogController(services),
 		Technology: NewTechnologyController(),
 		Contact:    NewContactController(),
 		CV:         NewCVController(),

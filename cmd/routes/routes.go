@@ -14,7 +14,7 @@ import (
 func MakeRoutes(app *config.Application) *chi.Mux {
 	r := chi.NewRouter()
 
-	controllers := *controllers.NewControllers()
+	controllers := *controllers.NewControllers(app.Services)
 
 	// standard middleware
 	r.Use(middleware.RequestID)

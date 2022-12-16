@@ -6,13 +6,20 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/danakin/festor.info/cmd/models"
 	"github.com/go-chi/chi/v5"
 )
 
-type Blog struct{}
+type Blog struct {
+	TypeService *models.TypeService
+	PostService *models.PostService
+}
 
-func NewBlogController() *Blog {
-	return &Blog{}
+func NewBlogController(services *models.Services) *Blog {
+	return &Blog{
+		TypeService: services.TypeService,
+		PostService: services.PostService,
+	}
 }
 
 func (c *Blog) Index(w http.ResponseWriter, r *http.Request) {
@@ -39,6 +46,24 @@ func (c *Blog) Index(w http.ResponseWriter, r *http.Request) {
 	tplData.Pagination = &pagination{
 		Page: &page,
 	}
+
+	types, err := c.TypeService.Get()
+	if err != nil {
+		// TODO: Abortcontroller
+		fmt.Println("%w", err)
+		return
+	}
+
+	posts, err := c.PostService.Get()
+
+	tplData.Data = struct {
+		Types []models.Type
+		Posts []models.Post
+	}{
+		Types: types,
+		Posts: posts,
+	}
+	fmt.Printf("%+v", tplData)
 
 	view(w, r, route, &tplData)
 }

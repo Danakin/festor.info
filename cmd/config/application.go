@@ -1,7 +1,22 @@
 package config
 
-type Application struct{}
+import (
+	"database/sql"
 
-func NewApplication() (*Application, error) {
-	return &Application{}, nil
+	"github.com/danakin/festor.info/cmd/models"
+)
+
+type Application struct {
+	DB *sql.DB
+
+	Services *models.Services
+}
+
+func NewApplication(db *sql.DB) (*Application, error) {
+	services := models.NewServices(db)
+
+	return &Application{
+		DB:       db,
+		Services: services,
+	}, nil
 }

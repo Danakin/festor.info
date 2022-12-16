@@ -13,15 +13,20 @@
     <label>
         <span>Tag</span>
         <select name="tag_id" id="tag_id">
-            <!-- TODO: Fetch from DATABASE -->
             <option value="" {{ if eq .Search.TagID 0}}selected{{ end }}>All</option>
-            <option value="1" {{ if eq .Search.TagID 1}}selected{{ end }}>Laravel</option>
-            <option value="2" {{ if eq .Search.TagID 2}}selected{{ end }}>Go</option>
-            <option value="3" {{ if eq .Search.TagID 3}}selected{{ end }}>Javascript</option>
+            {{ range $type := .Data.Types }}
+            <option value="{{ $type.Id }}" {{ if eq $.Search.TagID $type.Id }}selected{{ end }}>{{ $type.Title }}</option>
+            {{ end }}
         </select>
     </label>
     <button>Search</button>
 </form>
+
+<section>
+    {{ range $post := .Data.Posts }}
+    <article>{{ $post.Id }} - {{ $post.Title }} - {{ $post.TypeId }} - {{ $post.Description }} - {{ $post.UpdatedAt }}</article>
+    {{ end }}
+</section>
 
 <div>
     {{ .Pagination.Page }}
