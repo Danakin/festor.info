@@ -22,6 +22,7 @@ func NewBlogController(services *models.Services) *Blog {
 	}
 }
 
+// TODO: Pagination Build Helper
 func (c *Blog) Index(w http.ResponseWriter, r *http.Request) {
 	route := "templates/pages/blog/index.page.tmpl"
 	tplData := templateData{}
@@ -32,8 +33,12 @@ func (c *Blog) Index(w http.ResponseWriter, r *http.Request) {
 		tagId = 0
 	}
 	page, err := strconv.Atoi(r.URL.Query().Get("page"))
-	if err != nil {
+	if err != nil || page < 1 {
 		page = 1
+	}
+	limit, err := strconv.Atoi(r.URL.Query().Get("limit"))
+	if err != nil || limit < 1 || limit > 100 {
+		limit = 25
 	}
 
 	tplData.Search = struct {
@@ -44,7 +49,8 @@ func (c *Blog) Index(w http.ResponseWriter, r *http.Request) {
 		TagID: tagId,
 	}
 	tplData.Pagination = &pagination{
-		Page: &page,
+		Page:    page,
+		PerPage: limit,
 	}
 
 	types, err := c.TypeService.Get()
@@ -54,7 +60,13 @@ func (c *Blog) Index(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	posts, err := c.PostService.Get()
+	offset := (page - 1) * limit
+	posts, total, err := c.PostService.Paginate(limit, offset)
+	if err != nil {
+		fmt.Println("%w", err)
+		return
+	}
+	tplData.Pagination.Total = total
 
 	tplData.Data = struct {
 		Types []models.Type

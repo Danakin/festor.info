@@ -43,8 +43,9 @@ type templateData struct {
 }
 
 type pagination struct {
-	Page    *int
-	PerPage *int
+	Page    int
+	PerPage int
+	Total   int
 }
 
 func view(w http.ResponseWriter, r *http.Request, view string, data *templateData) {

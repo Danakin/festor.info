@@ -29,6 +29,6 @@
 </section>
 
 <div>
-    {{ .Pagination.Page }}
+    Showing {{ .Pagination.PerPage }} from {{ .Pagination.Total }} - Current Page: {{ .Pagination.Page }}
 </div>
 {{ end }}
