@@ -27,10 +27,14 @@ footer {
 }
 
 footer {
+  align-items: center;
+
   a {
     text-decoration: underline;
   }
-  p {
-    padding: 0.5rem;
+
+  div#copyright {
+    width: 360px;
+    padding: 1rem 3rem;
   }
 }

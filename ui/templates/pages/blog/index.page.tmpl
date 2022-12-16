@@ -13,6 +13,7 @@
     <label>
         <span>Tag</span>
         <select name="tag_id" id="tag_id">
+            <!-- TODO: Fetch from DATABASE -->
             <option value="" {{ if eq .Search.TagID 0}}selected{{ end }}>All</option>
             <option value="1" {{ if eq .Search.TagID 1}}selected{{ end }}>Laravel</option>
             <option value="2" {{ if eq .Search.TagID 2}}selected{{ end }}>Go</option>
@@ -23,6 +24,6 @@
 </form>
 
 <div>
-    {{ .Search.Page }}
+    {{ .Pagination.Page }}
 </div>
 {{ end }}

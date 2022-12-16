@@ -32,11 +32,12 @@ func (c *Blog) Index(w http.ResponseWriter, r *http.Request) {
 	tplData.Search = struct {
 		Title string
 		TagID int
-		Page  int
 	}{
 		Title: title,
 		TagID: tagId,
-		Page:  page,
+	}
+	tplData.Pagination = &pagination{
+		Page: &page,
 	}
 
 	view(w, r, route, &tplData)

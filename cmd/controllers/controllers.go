@@ -34,7 +34,14 @@ func NewControllers() *Controllers {
 type templateData struct {
 	CurrentYear int
 	Slug        string
+	Pagination  *pagination
 	Search      interface{}
+	Data        interface{}
+}
+
+type pagination struct {
+	Page    *int
+	PerPage *int
 }
 
 func view(w http.ResponseWriter, r *http.Request, view string, data *templateData) {
