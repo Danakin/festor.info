@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"strings"
 	"time"
 )
 
@@ -45,4 +46,21 @@ FROM tags;
 	}
 
 	return tags, nil
+}
+
+func (ts *TagService) FindByTitle(title string) (*int, error) {
+	query := `
+SELECT id
+FROM tags
+WHERE LOWER(title) = $1
+LIMIT 1;
+	`
+	row := ts.db.QueryRow(query, strings.ToLower(title))
+	var id int
+	err := row.Scan(&id)
+	if err != nil {
+		return nil, err
+	}
+
+	return &id, nil
 }

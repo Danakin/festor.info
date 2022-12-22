@@ -31,10 +31,7 @@ func (c *Blog) Index(w http.ResponseWriter, r *http.Request) {
 	tplData := templateData{}
 
 	title := strings.TrimSpace(r.URL.Query().Get("title"))
-	typeId, err := strconv.Atoi(r.URL.Query().Get("type_id"))
-	if err != nil {
-		typeId = 0
-	}
+	tag := strings.TrimSpace(r.URL.Query().Get("tag"))
 	page, err := strconv.Atoi(r.URL.Query().Get("page"))
 	if err != nil || page < 1 {
 		page = 1
@@ -45,19 +42,24 @@ func (c *Blog) Index(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tplData.Search = struct {
-		Title  string
-		TypeId int
+		Title string
 	}{
-		Title:  title,
-		TypeId: typeId,
+		Title: title,
 	}
 
-	types, err := c.TypeService.Get()
+	typeId, err := c.TypeService.FindByTitle("Blog")
 	if err != nil {
 		// TODO: Abortcontroller
 		fmt.Println("%w", err)
 		return
 	}
+
+	tagId, err := c.TagService.FindByTitle(tag)
+	if err != nil {
+		// TODO: Abortcontroller
+		fmt.Println("%w", err)
+	}
+	fmt.Println("Tag Id: ", tagId)
 
 	tags, err := c.TagService.Get()
 	if err != nil {
@@ -66,7 +68,8 @@ func (c *Blog) Index(w http.ResponseWriter, r *http.Request) {
 	}
 
 	offset := (page - 1) * limit
-	posts, total, err := c.PostService.Paginate(limit, offset, title, typeId)
+	fmt.Println(typeId, tagId)
+	posts, total, err := c.PostService.Paginate(limit, offset, title, typeId, tagId)
 	if err != nil {
 		fmt.Println("%w", err)
 		return
@@ -78,11 +81,9 @@ func (c *Blog) Index(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tplData.Data = struct {
-		Types []models.Type
 		Posts []models.Post
 		Tags  []models.Tag
 	}{
-		Types: types,
 		Posts: posts,
 		Tags:  tags,
 	}

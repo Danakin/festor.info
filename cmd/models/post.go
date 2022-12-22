@@ -66,8 +66,9 @@ ORDER BY
 	return posts, nil
 }
 
-func (ps *PostService) Paginate(limit int, offset int, title string, typeId int) ([]Post, int, error) {
+func (ps *PostService) Paginate(limit int, offset int, title string, typeId *int, tagId *int) ([]Post, int, error) {
 	// TODO: Refactor to Build Search Query Because this is Ugly AF
+	fmt.Println("Title:", title, " TypeId:", *typeId, " TagId:", tagId)
 	var total int
 	countQuery := `
 	SELECT count(*)
@@ -77,15 +78,9 @@ func (ps *PostService) Paginate(limit int, offset int, title string, typeId int)
 		AND released_at < NOW()
 	`
 	var countRow *sql.Row
-	if len(title) > 0 && typeId > 0 {
-		countQuery += "AND LOWER(title) like $1 AND type_id = $2"
-		countRow = ps.db.QueryRow(countQuery, fmt.Sprintf("%%%s%%", strings.ToLower(title)), typeId)
-	} else if len(title) > 0 && typeId == 0 {
+	if len(title) > 0 {
 		countQuery += "AND LOWER(title) like $1"
 		countRow = ps.db.QueryRow(countQuery, fmt.Sprintf("%%%s%%", strings.ToLower(title)))
-	} else if len(title) == 0 && typeId > 0 {
-		countQuery += "AND type_id = $1"
-		countRow = ps.db.QueryRow(countQuery, typeId)
 	} else {
 		countRow = ps.db.QueryRow(countQuery)
 	}
@@ -111,17 +106,9 @@ WHERE
 	posts.is_released = TRUE
 	AND posts.released_at < NOW()
 `
-	if len(title) > 0 && typeId > 0 {
-		query += `
-	AND LOWER(posts.title) like $3 AND posts.type_id = $4
-`
-	} else if len(title) > 0 {
+	if len(title) > 0 {
 		query += `
 	AND LOWER(posts.title) like $3		
-`
-	} else if typeId > 0 {
-		query += `
-	AND posts.type_id = $3
 `
 	}
 	query += `
@@ -133,12 +120,8 @@ OFFSET $2
 
 	var rows *sql.Rows
 	var err error
-	if len(title) > 0 && typeId > 0 {
-		rows, err = ps.db.Query(query, limit, offset, fmt.Sprintf("%%%s%%", strings.ToLower(title)), typeId)
-	} else if len(title) > 0 {
+	if len(title) > 0 {
 		rows, err = ps.db.Query(query, limit, offset, fmt.Sprintf("%%%s%%", strings.ToLower(title)))
-	} else if typeId > 0 {
-		rows, err = ps.db.Query(query, limit, offset, typeId)
 	} else {
 		rows, err = ps.db.Query(query, limit, offset)
 	}

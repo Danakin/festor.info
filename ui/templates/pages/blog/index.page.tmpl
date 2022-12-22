@@ -10,15 +10,6 @@
         <span>Title</span>
         <input type="search" name="title" id="title" value="{{ .Search.Title }}">
     </label>
-    <label>
-        <span>Tag</span>
-        <select name="type_id" id="type_id">
-            <option value="" {{ if eq .Search.TypeId 0}}selected{{ end }}>All</option>
-            {{ range $type := .Data.Types }}
-            <option value="{{ $type.Id }}" {{ if eq $.Search.TypeId $type.Id }}selected{{ end }}>{{ $type.Title }}</option>
-            {{ end }}
-        </select>
-    </label>
     <button>Search</button>
 </form>
 

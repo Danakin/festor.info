@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"strings"
 	"time"
 )
 
@@ -21,7 +22,7 @@ type TypeService struct {
 func (ts *TypeService) Get() ([]Type, error) {
 	query := `
 SELECT id, title
-FROM TYPES;
+FROM types;
 	`
 	rows, err := ts.db.Query(query)
 	if err != nil {
@@ -44,4 +45,21 @@ FROM TYPES;
 	}
 
 	return types, nil
+}
+
+func (ts *TypeService) FindByTitle(title string) (*int, error) {
+	query := `
+SELECT id
+FROM types
+WHERE LOWER(title) = $1
+LIMIT 1;
+	`
+	row := ts.db.QueryRow(query, strings.ToLower(title))
+	var id int
+	err := row.Scan(&id)
+	if err != nil {
+		return nil, err
+	}
+
+	return &id, nil
 }
