@@ -1,0 +1,27 @@
+{{ template "app" . }}
+
+{{ define "title" }}New Blog Article{{ end }}
+
+{{ define "body" }}
+<h2>Create Blog Article</h2>
+
+<form id="create" method="POST" action="/blog">
+    <label>
+        <span>Title</span>
+        <input type="title" name="title" id="title" value="{{ .Data.Title }}">
+    </label>
+    <label>
+        <span>Body</span>
+        <textarea name="description" id="description">{{ .Data.Description }}</textarea>
+    </label>
+    <label>
+        <span>Is Released</span>
+        <input type="checkbox" name="is_released" id="is_released" value="{{ .Data.IsReleased }}">
+    </label>
+    <label>
+        <span>Release At</span>
+        <input type="datetime-local" name="released_at" id="released_at" value="{{ .Data.ReleasedAt }}">
+    </label>
+    <button>Create</button>
+</form>
+{{ end }}

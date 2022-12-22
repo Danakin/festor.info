@@ -24,7 +24,7 @@
 
 <section>
     {{ range $post := .Data.Posts }}
-    <article>{{ $post.Id }} - {{ $post.Title }} - {{ $post.TypeId }} - {{ $post.Description }} - {{ $post.UpdatedAt }} - {{ $post.Type.Title }}</article>
+    <article>{{ $post.Id }} - {{ $post.Title }} - {{ $post.TypeId }} - {{ $post.Description }} - {{ $post.ReleasedAt }} - {{ $post.UpdatedAt }} - {{ $post.Type.Title }}</article>
     {{ end }}
 </section>
 

@@ -33,6 +33,8 @@ func MakeRoutes(app *config.Application) *chi.Mux {
 	r.Get("/cv", controllers.CV.Index)
 	r.Get("/projects", controllers.Project.Index)
 	r.Get("/blog", controllers.Blog.Index)
+	r.Post("/blog", controllers.Blog.Store)
+	r.Get("/blog/create", controllers.Blog.Create)
 	r.Get("/blog/{slug}", controllers.Blog.Show)
 
 	// r.Mount("/admin", adminRouter())

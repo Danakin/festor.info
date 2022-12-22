@@ -98,6 +98,7 @@ SELECT
 	posts.type_id,
 	posts.title,
 	posts.description,
+	posts.released_at,
 	posts.updated_at,
 	types.title as type_title
 FROM
@@ -150,7 +151,7 @@ OFFSET $2
 		var post Post = Post{
 			Type: &Type{},
 		}
-		err = rows.Scan(&post.Id, &post.TypeId, &post.Title, &post.Description, &post.UpdatedAt, &post.Type.Title)
+		err = rows.Scan(&post.Id, &post.TypeId, &post.Title, &post.Description, &post.ReleasedAt, &post.UpdatedAt, &post.Type.Title)
 		if err != nil {
 			return nil, -1, err
 		}
@@ -161,4 +162,20 @@ OFFSET $2
 	}
 
 	return posts, total, nil
+}
+
+func (ps *PostService) Insert(post *Post) (*Post, error) {
+	query := `
+	INSERT INTO posts(type_id, title, description, is_released, released_at)
+	VALUES (1, $1, $2, $3, $4)
+	RETURNING id;
+	`
+
+	row := ps.db.QueryRow(query, post.Title, post.Description, post.IsReleased, post.ReleasedAt)
+	err := row.Scan(&post.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	return post, nil
 }

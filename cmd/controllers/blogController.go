@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/danakin/festor.info/cmd/models"
 	"github.com/go-chi/chi/v5"
@@ -91,4 +92,55 @@ func (c *Blog) Show(w http.ResponseWriter, r *http.Request) {
 	// data.Slug = chi.URLParam(r, "slug")
 
 	view(w, r, route, data)
+}
+
+func (c *Blog) Create(w http.ResponseWriter, r *http.Request) {
+	route := "templates/pages/blog/create.page.tmpl"
+	tplData := &templateData{}
+	tplData.Data = struct {
+		Title       string
+		Description string
+		IsReleased  bool
+		ReleasedAt  string
+	}{
+		Title:       "",
+		Description: "",
+		IsReleased:  false,
+		ReleasedAt:  "",
+	}
+
+	view(w, r, route, tplData)
+}
+
+func (c *Blog) Store(w http.ResponseWriter, r *http.Request) {
+	title := r.FormValue("title")
+	description := r.FormValue("description")
+	isReleased := r.Form.Has("is_released")
+	releasedAt := r.FormValue("released_at")
+
+	// TODO: validation
+	// TODO: CSRF
+
+	// 2022-12-22T13:05
+	t, err := time.Parse("2006-01-02T15:04", releasedAt)
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	post := &models.Post{
+		Title:       title,
+		Description: description,
+		IsReleased:  isReleased,
+		ReleasedAt:  &t,
+	}
+	post, err = c.PostService.Insert(post)
+	if err != nil {
+		fmt.Println("%w", err)
+		return
+	}
+
+	fmt.Println("Post after update...", post)
+
+	http.Redirect(w, r, "/blog", http.StatusFound)
 }
