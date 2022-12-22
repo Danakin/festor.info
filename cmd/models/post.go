@@ -9,7 +9,7 @@ import (
 
 type Post struct {
 	Id          string
-	TypeId      uint64
+	TypeId      int64
 	Title       string
 	Description string
 	Image       string
@@ -19,6 +19,7 @@ type Post struct {
 	UpdatedAt   *time.Time
 
 	Type *Type
+	Tags []*Tag
 }
 
 type PostService struct {
@@ -165,14 +166,22 @@ OFFSET $2
 }
 
 func (ps *PostService) Insert(post *Post) (*Post, error) {
+	blogQuery := `SELECT id FROM types WHERE title = 'Blog'`
+	row := ps.db.QueryRow(blogQuery)
+	var typeId int
+	err := row.Scan(&typeId)
+	if err != nil {
+		return nil, err
+	}
+
 	query := `
 	INSERT INTO posts(type_id, title, description, is_released, released_at)
-	VALUES (1, $1, $2, $3, $4)
+	VALUES ($1, $2, $3, $4, $5)
 	RETURNING id;
 	`
 
-	row := ps.db.QueryRow(query, post.Title, post.Description, post.IsReleased, post.ReleasedAt)
-	err := row.Scan(&post.Id)
+	row = ps.db.QueryRow(query, typeId, post.Title, post.Description, post.IsReleased, post.ReleasedAt)
+	err = row.Scan(&post.Id)
 	if err != nil {
 		return nil, err
 	}

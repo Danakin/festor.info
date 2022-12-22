@@ -6,7 +6,7 @@ import (
 )
 
 type Type struct {
-	Id          uint64
+	Id          int64
 	Title       string
 	Description string
 	Icon        string

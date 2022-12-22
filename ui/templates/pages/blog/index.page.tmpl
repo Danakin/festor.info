@@ -23,6 +23,12 @@
 </form>
 
 <section>
+    {{ range $tag := .Data.Tags }}
+    <article>{{ $tag.Id }} - {{ $tag.Title }} - {{ $tag.FontColor }} - {{ $tag.BackgroundColor }} - {{ $tag.BorderColor }}</article>
+    {{ end }}
+</section>
+
+<section>
     {{ range $post := .Data.Posts }}
     <article>{{ $post.Id }} - {{ $post.Title }} - {{ $post.TypeId }} - {{ $post.Description }} - {{ $post.ReleasedAt }} - {{ $post.UpdatedAt }} - {{ $post.Type.Title }}</article>
     {{ end }}

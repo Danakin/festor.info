@@ -14,12 +14,14 @@ import (
 type Blog struct {
 	TypeService *models.TypeService
 	PostService *models.PostService
+	TagService  *models.TagService
 }
 
 func NewBlogController(services *models.Services) *Blog {
 	return &Blog{
 		TypeService: services.TypeService,
 		PostService: services.PostService,
+		TagService:  services.TagService,
 	}
 }
 
@@ -57,6 +59,12 @@ func (c *Blog) Index(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	tags, err := c.TagService.Get()
+	if err != nil {
+		fmt.Println("%w", err)
+		return
+	}
+
 	offset := (page - 1) * limit
 	posts, total, err := c.PostService.Paginate(limit, offset, title, typeId)
 	if err != nil {
@@ -72,9 +80,11 @@ func (c *Blog) Index(w http.ResponseWriter, r *http.Request) {
 	tplData.Data = struct {
 		Types []models.Type
 		Posts []models.Post
+		Tags  []models.Tag
 	}{
 		Types: types,
 		Posts: posts,
+		Tags:  tags,
 	}
 	fmt.Printf("%+v", tplData)
 
@@ -120,6 +130,8 @@ func (c *Blog) Store(w http.ResponseWriter, r *http.Request) {
 
 	// TODO: validation
 	// TODO: CSRF
+	// TODO: Add Tags
+	// TODO: Add Type
 
 	// 2022-12-22T13:05
 	t, err := time.Parse("2006-01-02T15:04", releasedAt)
