@@ -12,10 +12,10 @@
     </label>
     <label>
         <span>Tag</span>
-        <select name="tag_id" id="tag_id">
-            <option value="" {{ if eq .Search.TagID 0}}selected{{ end }}>All</option>
+        <select name="type_id" id="type_id">
+            <option value="" {{ if eq .Search.TypeId 0}}selected{{ end }}>All</option>
             {{ range $type := .Data.Types }}
-            <option value="{{ $type.Id }}" {{ if eq $.Search.TagID $type.Id }}selected{{ end }}>{{ $type.Title }}</option>
+            <option value="{{ $type.Id }}" {{ if eq $.Search.TypeId $type.Id }}selected{{ end }}>{{ $type.Title }}</option>
             {{ end }}
         </select>
     </label>

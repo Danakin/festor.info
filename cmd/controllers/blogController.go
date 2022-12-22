@@ -28,9 +28,9 @@ func (c *Blog) Index(w http.ResponseWriter, r *http.Request) {
 	tplData := templateData{}
 
 	title := strings.TrimSpace(r.URL.Query().Get("title"))
-	tagId, err := strconv.Atoi(r.URL.Query().Get("tag_id"))
+	typeId, err := strconv.Atoi(r.URL.Query().Get("type_id"))
 	if err != nil {
-		tagId = 0
+		typeId = 0
 	}
 	page, err := strconv.Atoi(r.URL.Query().Get("page"))
 	if err != nil || page < 1 {
@@ -42,11 +42,11 @@ func (c *Blog) Index(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tplData.Search = struct {
-		Title string
-		TagID int
+		Title  string
+		TypeId int
 	}{
-		Title: title,
-		TagID: tagId,
+		Title:  title,
+		TypeId: typeId,
 	}
 
 	types, err := c.TypeService.Get()
@@ -57,7 +57,7 @@ func (c *Blog) Index(w http.ResponseWriter, r *http.Request) {
 	}
 
 	offset := (page - 1) * limit
-	posts, total, err := c.PostService.Paginate(limit, offset)
+	posts, total, err := c.PostService.Paginate(limit, offset, title, typeId)
 	if err != nil {
 		fmt.Println("%w", err)
 		return

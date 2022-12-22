@@ -3,6 +3,7 @@ package models
 import (
 	"database/sql"
 	"fmt"
+	"strings"
 	"time"
 )
 
@@ -62,7 +63,9 @@ ORDER BY
 	return posts, nil
 }
 
-func (ps *PostService) Paginate(limit int, offset int) ([]Post, int, error) {
+func (ps *PostService) Paginate(limit int, offset int, title string, typeId int) ([]Post, int, error) {
+	fmt.Println(typeId)
+
 	var total int
 	countQuery := `
 	SELECT count(*)
@@ -71,12 +74,18 @@ func (ps *PostService) Paginate(limit int, offset int) ([]Post, int, error) {
 		is_released = TRUE
 		AND released_at < NOW()
 	`
-	row := ps.db.QueryRow(countQuery)
-	if err := row.Scan(&total); err != nil {
+	var countRow *sql.Row
+	if len(title) > 0 {
+		countQuery += "AND LOWER(title) like $1"
+		countRow = ps.db.QueryRow(countQuery, fmt.Sprintf("%%%s%%", strings.ToLower(title)))
+	} else {
+		countRow = ps.db.QueryRow(countQuery)
+	}
+	if err := countRow.Scan(&total); err != nil {
 		return nil, -1, err
 	}
 
-	query := fmt.Sprintf(`
+	query := `
 SELECT
 	id,
 	type_id,
@@ -88,13 +97,27 @@ FROM
 WHERE
 	is_released = TRUE
 	AND released_at < NOW()
+`
+	if len(title) > 0 {
+		query += `
+	AND LOWER(title) like $3		
+`
+	}
+	query += `
 ORDER BY
 	updated_at DESC
-LIMIT %d
-OFFSET %d
-`, limit, offset)
+LIMIT $1
+OFFSET $2
+`
+	fmt.Println(query)
 
-	rows, err := ps.db.Query(query)
+	var rows *sql.Rows
+	var err error
+	if len(title) > 0 {
+		rows, err = ps.db.Query(query, limit, offset, fmt.Sprintf("%%%s%%", strings.ToLower(title)))
+	} else {
+		rows, err = ps.db.Query(query, limit, offset)
+	}
 	if err != nil {
 		return nil, -1, err
 	}
