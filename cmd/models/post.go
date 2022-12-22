@@ -71,23 +71,49 @@ func (ps *PostService) Paginate(limit int, offset int, title string, typeId *int
 	fmt.Println("Title:", title, " TypeId:", *typeId, " TagId:", tagId)
 	var total int
 	countQuery := `
-	SELECT count(*)
-	FROM posts
+SELECT count(*)
+FROM posts
+`
+	if tagId != nil {
+		countQuery += `
+JOIN post_tag
+	ON post_tag.post_id = posts.id
+JOIN tags
+	ON tags.id = post_tag.tag_id	
+`
+	}
+	countQuery += `
 	WHERE
 		is_released = TRUE
 		AND released_at < NOW()
 	`
-	var countRow *sql.Row
+	pos := 0
 	if len(title) > 0 {
-		countQuery += "AND LOWER(title) like $1"
-		countRow = ps.db.QueryRow(countQuery, fmt.Sprintf("%%%s%%", strings.ToLower(title)))
-	} else {
-		countRow = ps.db.QueryRow(countQuery)
+		pos += 1
+		countQuery += fmt.Sprintf(`
+		AND LOWER(posts.title) like $%d
+`, pos)
 	}
+	if tagId != nil {
+		pos += 1
+		countQuery += fmt.Sprintf(`
+		AND tags.id = $%d
+`, pos)
+	}
+	var countRow *sql.Row
+	var args []any
+	if len(title) > 0 {
+		args = append(args, fmt.Sprintf("%%%s%%", strings.ToLower(title)))
+	}
+	if tagId != nil {
+		args = append(args, tagId)
+	}
+	countRow = ps.db.QueryRow(countQuery, args...)
 	if err := countRow.Scan(&total); err != nil {
 		return nil, -1, err
 	}
 
+	pos = 0
 	query := `
 SELECT
 	posts.id,
@@ -102,29 +128,44 @@ FROM
 JOIN
 	types
 	ON types.id = posts.type_id
+	`
+	if tagId != nil {
+		query += `
+	JOIN post_tag
+		ON post_tag.post_id = posts.id
+	JOIN tags
+		ON tags.id = post_tag.tag_id		
+`
+	}
+	query += `
 WHERE
 	posts.is_released = TRUE
 	AND posts.released_at < NOW()
 `
 	if len(title) > 0 {
-		query += `
-	AND LOWER(posts.title) like $3		
-`
+		pos += 1
+		query += fmt.Sprintf(`
+	AND LOWER(posts.title) like $%d
+`, pos)
 	}
-	query += `
+	if tagId != nil {
+		pos += 1
+		query += fmt.Sprintf(`
+	AND tags.id = $%d
+`, pos)
+	}
+	query += fmt.Sprintf(`
 ORDER BY
 	posts.updated_at DESC
-LIMIT $1
-OFFSET $2
-`
+LIMIT $%d
+OFFSET $%d
+`, pos+1, pos+2)
 
 	var rows *sql.Rows
 	var err error
-	if len(title) > 0 {
-		rows, err = ps.db.Query(query, limit, offset, fmt.Sprintf("%%%s%%", strings.ToLower(title)))
-	} else {
-		rows, err = ps.db.Query(query, limit, offset)
-	}
+	args = append(args, limit)
+	args = append(args, offset)
+	rows, err = ps.db.Query(query, args...)
 	if err != nil {
 		return nil, -1, err
 	}
