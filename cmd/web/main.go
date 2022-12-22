@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"net/http"
+    "net/http"
 
 	"github.com/danakin/festor.info/cmd/config"
 	"github.com/danakin/festor.info/cmd/database/psql"
@@ -38,7 +38,7 @@ func main() {
 		panic(err.Error())
 	}
 
-	fmt.Printf("%v", app)
+    fmt.Printf("%v", app)
 
 	routes := routes.MakeRoutes(app)
 

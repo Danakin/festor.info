@@ -48,10 +48,6 @@ func (c *Blog) Index(w http.ResponseWriter, r *http.Request) {
 		Title: title,
 		TagID: tagId,
 	}
-	tplData.Pagination = &pagination{
-		Page:    page,
-		PerPage: limit,
-	}
 
 	types, err := c.TypeService.Get()
 	if err != nil {
@@ -66,7 +62,11 @@ func (c *Blog) Index(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("%w", err)
 		return
 	}
-	tplData.Pagination.Total = total
+	tplData.Pagination = &pagination{
+		Page:    page,
+		PerPage: limit,
+		Total:   total,
+	}
 
 	tplData.Data = struct {
 		Types []models.Type

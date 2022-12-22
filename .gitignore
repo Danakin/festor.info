@@ -26,4 +26,7 @@ ui/static/css/app.css
 ui/static/js/app.js
 node_modules/
 
+.fleet/
+
 festor.info
+modd.conf
