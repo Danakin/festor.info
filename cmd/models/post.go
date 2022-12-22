@@ -17,6 +17,8 @@ type Post struct {
 	ReleasedAt  *time.Time
 	CreatedAt   *time.Time
 	UpdatedAt   *time.Time
+
+	Type *Type
 }
 
 type PostService struct {
@@ -92,33 +94,37 @@ func (ps *PostService) Paginate(limit int, offset int, title string, typeId int)
 
 	query := `
 SELECT
-	id,
-	type_id,
-	title,
-	description,
-	updated_at
+	posts.id,
+	posts.type_id,
+	posts.title,
+	posts.description,
+	posts.updated_at,
+	types.title as type_title
 FROM
 	posts
+JOIN
+	types
+	ON types.id = posts.type_id
 WHERE
-	is_released = TRUE
-	AND released_at < NOW()
+	posts.is_released = TRUE
+	AND posts.released_at < NOW()
 `
 	if len(title) > 0 && typeId > 0 {
 		query += `
-	AND LOWER(title) like $3 AND type_id = $4
+	AND LOWER(posts.title) like $3 AND posts.type_id = $4
 `
 	} else if len(title) > 0 {
 		query += `
-	AND LOWER(title) like $3		
+	AND LOWER(posts.title) like $3		
 `
 	} else if typeId > 0 {
 		query += `
-	AND type_id = $3
+	AND posts.type_id = $3
 `
 	}
 	query += `
 ORDER BY
-	updated_at DESC
+	posts.updated_at DESC
 LIMIT $1
 OFFSET $2
 `
@@ -141,8 +147,10 @@ OFFSET $2
 
 	var posts []Post
 	for rows.Next() {
-		var post Post
-		err = rows.Scan(&post.Id, &post.TypeId, &post.Title, &post.Description, &post.UpdatedAt)
+		var post Post = Post{
+			Type: &Type{},
+		}
+		err = rows.Scan(&post.Id, &post.TypeId, &post.Title, &post.Description, &post.UpdatedAt, &post.Type.Title)
 		if err != nil {
 			return nil, -1, err
 		}
