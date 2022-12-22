@@ -64,8 +64,7 @@ ORDER BY
 }
 
 func (ps *PostService) Paginate(limit int, offset int, title string, typeId int) ([]Post, int, error) {
-	fmt.Println(typeId)
-
+	// TODO: Refactor to Build Search Query Because this is Ugly AF
 	var total int
 	countQuery := `
 	SELECT count(*)
@@ -75,9 +74,15 @@ func (ps *PostService) Paginate(limit int, offset int, title string, typeId int)
 		AND released_at < NOW()
 	`
 	var countRow *sql.Row
-	if len(title) > 0 {
+	if len(title) > 0 && typeId > 0 {
+		countQuery += "AND LOWER(title) like $1 AND type_id = $2"
+		countRow = ps.db.QueryRow(countQuery, fmt.Sprintf("%%%s%%", strings.ToLower(title)), typeId)
+	} else if len(title) > 0 && typeId == 0 {
 		countQuery += "AND LOWER(title) like $1"
 		countRow = ps.db.QueryRow(countQuery, fmt.Sprintf("%%%s%%", strings.ToLower(title)))
+	} else if len(title) == 0 && typeId > 0 {
+		countQuery += "AND type_id = $1"
+		countRow = ps.db.QueryRow(countQuery, typeId)
 	} else {
 		countRow = ps.db.QueryRow(countQuery)
 	}
@@ -98,9 +103,17 @@ WHERE
 	is_released = TRUE
 	AND released_at < NOW()
 `
-	if len(title) > 0 {
+	if len(title) > 0 && typeId > 0 {
+		query += `
+	AND LOWER(title) like $3 AND type_id = $4
+`
+	} else if len(title) > 0 {
 		query += `
 	AND LOWER(title) like $3		
+`
+	} else if typeId > 0 {
+		query += `
+	AND type_id = $3
 `
 	}
 	query += `
@@ -109,12 +122,15 @@ ORDER BY
 LIMIT $1
 OFFSET $2
 `
-	fmt.Println(query)
 
 	var rows *sql.Rows
 	var err error
-	if len(title) > 0 {
+	if len(title) > 0 && typeId > 0 {
+		rows, err = ps.db.Query(query, limit, offset, fmt.Sprintf("%%%s%%", strings.ToLower(title)), typeId)
+	} else if len(title) > 0 {
 		rows, err = ps.db.Query(query, limit, offset, fmt.Sprintf("%%%s%%", strings.ToLower(title)))
+	} else if typeId > 0 {
+		rows, err = ps.db.Query(query, limit, offset, typeId)
 	} else {
 		rows, err = ps.db.Query(query, limit, offset)
 	}
